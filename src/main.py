@@ -3,6 +3,14 @@ from sys import argv
 
 test_file = '''
 
+// This is a comment!
+//add(1, 1)
+//sub(5, 3)
+//mul(1, 2)
+//div(8, 4)
+//mod(6, 4)
+//
+
 def add(lhs, rhs)
     lhs + rhs
 end
@@ -28,11 +36,6 @@ def main()
 end
 
 '''
-#add(1, 1)
-#sub(5, 3)
-#mul(1, 2)
-#div(8, 4)
-#mod(6, 4)
 
 def main(args):
     cc = Compiler()

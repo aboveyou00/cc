@@ -2,10 +2,14 @@
 
 CompilationUnit := (Ws* Token)* Ws* EofToken
 
-Ws := ' ' | '\t' | Nl
+Ws := ' ' | '\t' | Nl | Comment
 
 Nl := '\r' ['\n']
     | '\n'
+
+Comment := '//' ANY_CHARACTER_EXCEPT_SlCommentInterruptChar
+
+SlCommentInterruptChar := '\r' | '\n' | '\0' | END_OF_FILE
 
 Token := IdentToken
        | KeywordToken
@@ -24,6 +28,8 @@ NumToken := DecDigit+
 
 DecDigit := '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
 
-ErrorToken := ANY_CHARACTER_EXCEPT_Ws_AND_EOF*
+ErrorToken := ANY_CHARACTER_EXCEPT_ErrInterruptChar*
+
+ErrInterruptChar := ' ' | '\t' | '\r' | '\n' | '\0' | END_OF_FILE
 
 EofToken := END_OF_FILE | '\0'

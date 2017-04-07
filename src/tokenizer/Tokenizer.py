@@ -43,10 +43,24 @@ class Tokenizer(object):
         while True:
             if self.string[posArr[0]] in ' \t':
                 posArr[0] += 1
-            elif not self.collect_nl(posArr):
+            elif not self.collect_comment(posArr) and not self.collect_nl(posArr):
                 break
         
         return posArr[0]
+    
+    def collect_comment(self, pos):
+        if self.string[pos[0]] == '/' and self.string[pos[0] + 1] == '/':
+            pos[0] += 2
+            
+            while True:
+                chr = self.string[pos[0]]
+                if chr in '\r\n\0':
+                    break
+                pos[0] += 1
+            
+            return True
+        
+        return False
     
     def collect_nl(self, pos):
         if self.string[pos[0]] in '\r\n':
@@ -61,14 +75,18 @@ class Tokenizer(object):
     
     def collect_ident(self, pos, line_idx):
         if self.string[pos].isalpha() or self.string[pos] in '_$@':
-            ident = self.string[pos]
+            isLiteral = self.string[pos] == '@'
+            ident = '' if isLiteral else self.string[pos]
             pos += 1
             
             while self.string[pos].isalnum() or self.string[pos] in '_$':
                 ident += self.string[pos]
                 pos += 1
             
-            if isKeyword(ident):
+            if isLiteral and ident == '':
+                return (None, pos - 1) # '@' is not a valid identifier by itself
+            
+            if not isLiteral and isKeyword(ident):
                 return (KeywordToken(self.line_num, line_idx, ident), pos)
             
             return (IdentToken(self.line_num, line_idx, ident), pos)
