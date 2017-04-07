@@ -1,6 +1,11 @@
 from syntax.TreeMarker import *
-from syntax.ExprSyntax import *
+
 from syntax.ErrorSyntax import *
+
+from syntax.DeclSyntax import *
+from syntax.FuncDeclSyntax import *
+
+from syntax.ExprSyntax import *
 from syntax.AddExprSyntax import *
 from syntax.MultExprSyntax import *
 from syntax.TermExprSyntax import *
@@ -11,17 +16,48 @@ class SyntaxTreeParser(object):
     
     def parseCompilationUnit(self, cunit):
         collect = TreeMarker(cunit)
-        exprs = []
+        decls = []
         
         while True:
             if collect.expectEof():
                 break
             
-            expr = self.parseExprSyntax(collect)
-            if not expr:
+            decl = self.parseDeclSyntax(collect)
+            if not decl:
                 start = collect.mark()
                 collect.reset(len(cunit.tokens))
-                exprs.append(ErrorSyntax(*collect.argsFrom(start)))
+                decls.append(ErrorSyntax(*collect.argsFrom(start)))
+                break
+            
+            decls.append(decl)
+        
+        return decls
+    
+    def parseDeclSyntax(self, collect):
+        return self.parseFuncDeclSyntax(collect)
+    
+    def parseFuncDeclSyntax(self, collect):
+        begin = collect.mark()
+        
+        if not collect.expectIdent('def'):
+            return None
+        
+        name = collect.expectIdent()
+        #TODO: expect parameter list
+        if name and collect.expectOp('(') and collect.expectOp(')'):
+            exprs = self.parseExpressionList(collect)
+            if collect.expectIdent('end'):
+                return FuncDeclSyntax(*collect.argsFrom(begin), name.ident, exprs)
+        
+        collect.reset(begin)
+        return None
+    
+    def parseExpressionList(self, collect):
+        exprs = []
+        
+        while True:
+            expr = self.parseExprSyntax(collect)
+            if not expr:
                 break
             
             exprs.append(expr)
