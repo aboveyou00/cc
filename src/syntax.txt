@@ -4,7 +4,7 @@ CompilationUnit := Decl* EOF
 
 Decl := FuncDecl
 
-FuncDecl := 'def' IdentToken '(' ParamList ')' Expr* 'end'
+FuncDecl := 'def' IdentToken SAME_LINE('(') ParamList ')' Expr* 'end'
 
 ParamList := [(ParamList ',')* Param]
 
@@ -14,11 +14,14 @@ Type := ???
 
 Expr := AddExpr
 
-AddExpr := AddExpr ('+' | '-') MultExpr
+AddExpr := AddExpr SAME_LINE('+' | '-') MultExpr
          | MultExpr
 
-MultExpr := MultExpr ('*' | '/' | '%') TermExpr
-            TermExpr
+MultExpr := MultExpr SAME_LINE('*' | '/' | '%') PrimaryExpr
+            PrimaryExpr
+
+PrimaryExpr := PrimaryExpr SAME_LINE('(') ArgList ')'
+             | TermExpr
 
 TermExpr := '(' ExprSyntax ')'
           | NumberToken

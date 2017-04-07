@@ -4,11 +4,6 @@ from sys import argv
 test_file = '''
 
 // This is a comment!
-//add(1, 1)
-//sub(5, 3)
-//mul(1, 2)
-//div(8, 4)
-//mod(6, 4)
 //
 
 def add(lhs, rhs)
@@ -32,7 +27,10 @@ def mod(lhs, rhs)
 end
 
 def main()
-    1+2+3
+    add(1, 1)
+    mul(1, sub(5, 3))
+    div(8, 4)
+    mod(6, 4) + 2 + 3
 end
 
 '''

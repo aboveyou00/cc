@@ -10,6 +10,7 @@ from syntax.ParamSyntax import *
 from syntax.ExprSyntax import *
 from syntax.AddExprSyntax import *
 from syntax.MultExprSyntax import *
+from syntax.InvocationExprSyntax import *
 from syntax.TermExprSyntax import *
 
 class SyntaxTreeParser(object):
@@ -129,7 +130,7 @@ class SyntaxTreeParser(object):
     
     def parseMultExprSyntax(self, collect):
         begin = collect.mark()
-        lhs = self.parseTermExprSyntax(collect)
+        lhs = self.parsePrimaryExprSyntax(collect)
         if not lhs:
             return None
         
@@ -139,13 +140,47 @@ class SyntaxTreeParser(object):
             if not op:
                 break
             
-            rhs = self.parseTermExprSyntax(collect)
+            rhs = self.parsePrimaryExprSyntax(collect)
             if not rhs:
                 collect.reset(mark)
                 break
             lhs = MultExprSyntax(*collect.argsFrom(begin), lhs, op.op, rhs)
         
         return lhs
+    
+    def parsePrimaryExprSyntax(self, collect):
+        begin = collect.mark()
+        lhs = self.parseTermExprSyntax(collect)
+        if not lhs:
+            return None
+        
+        while True:
+            reset = collect.mark()
+            if not collect.expectOp('('):
+                break
+            
+            args = self.parseArgumentList(collect)
+            if not collect.expectOp(')'):
+                collect.reset(reset)
+                break
+            lhs = InvocationExprSyntax(*collect.argsFrom(begin), lhs, args)
+        
+        return lhs
+    
+    def parseArgumentList(self, collect):
+        args = []
+        
+        while True:
+            if len(args) > 0 and not collect.expectOp(','):
+                break
+            
+            arg = self.parseExprSyntax(collect)
+            if not arg:
+                break
+            
+            args.append(arg)
+        
+        return args
     
     def parseTermExprSyntax(self, collect):
         begin = collect.mark()
