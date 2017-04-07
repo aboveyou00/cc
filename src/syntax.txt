@@ -1,0 +1,26 @@
+
+
+AddExpr := AddExpr ('+' | '-') MultExpr
+         | MultExpr
+
+MultExpr := MultExpr ('*' | '/' | '%') TermExpr
+            TermExpr
+
+TermExpr := '(' ExprSyntax ')'
+          | NumberToken
+
+
+
+AddExpr := AddExpr ('+' | '-') MultExpr
+         | MultExpr
+
+MultExpr := MultExpr ('*' | '/' | '%') UnaryExpr
+            UnaryExpr
+
+UnaryExpr := ('-' | '+') UnaryExpr
+           | PrimaryExpr
+
+PrimaryExpr := TermExpr ['**' UnaryExpr]
+
+TermExpr := '(' ExprSyntax ')'
+          | NumberToken
