@@ -1,4 +1,5 @@
 from syntax.ExprSyntax import *
+from syntax.TermExprSyntax import *
 
 class MultExprSyntax(ExprSyntax):
     def __init__(self, cunit, tok_start_idx, tok_count, lhs, op, rhs):
@@ -7,5 +8,8 @@ class MultExprSyntax(ExprSyntax):
         self.op = op
         self.rhs = rhs
     
+    def isHigherPrecedence(self, other):
+        return type(other) in [TermExprSyntax]
+    
     def __str__(self):
-        return '(' + str(self.lhs) + ') ' + self.op + ' (' + str(self.rhs) + ')'
+        return self.precendenceParens(self.lhs) + ' ' + self.op + ' ' + self.precendenceParens(self.rhs)
