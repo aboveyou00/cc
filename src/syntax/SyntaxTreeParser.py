@@ -4,6 +4,8 @@ from syntax.ErrorSyntax import *
 
 from syntax.DeclSyntax import *
 from syntax.FuncDeclSyntax import *
+from syntax.ParamListSyntax import *
+from syntax.ParamSyntax import *
 
 from syntax.ExprSyntax import *
 from syntax.AddExprSyntax import *
@@ -39,17 +41,55 @@ class SyntaxTreeParser(object):
     def parseFuncDeclSyntax(self, collect):
         begin = collect.mark()
         
-        if not collect.expectIdent('def'):
+        if not collect.expectKeyword('def'):
             return None
         
         name = collect.expectIdent()
-        #TODO: expect parameter list
-        if name and collect.expectOp('(') and collect.expectOp(')'):
-            exprs = self.parseExpressionList(collect)
-            if collect.expectIdent('end'):
-                return FuncDeclSyntax(*collect.argsFrom(begin), name.ident, exprs)
+        if name and collect.expectOp('('):
+            params = self.parseParamListSyntax(collect)
+            if collect.expectOp(')'):
+                exprs = self.parseExpressionList(collect)
+                if collect.expectKeyword('end'):
+                    return FuncDeclSyntax(*collect.argsFrom(begin), name.ident, params, exprs)
         
         collect.reset(begin)
+        return None
+    
+    def parseParamListSyntax(self, collect):
+        begin = collect.mark()
+        params = []
+        
+        while True:
+            pbegin = collect.mark()
+            if len(params) > 0 and not collect.expectOp(','):
+                break
+            
+            param = self.parseParamSyntax(collect)
+            if not param:
+                collect.reset(pbegin)
+                break
+            
+            params.append(param)
+        
+        return ParamListSyntax(*collect.argsFrom(begin), params)
+    
+    def parseParamSyntax(self, collect):
+        begin = collect.mark()
+        
+        name = collect.expectIdent()
+        if not name:
+            return None
+        
+        tbegin = collect.mark()
+        if collect.expectOp(':'):
+            type = self.parseTypeSyntax(collect)
+            if type:
+                return ParamSyntax(*collect.argsFrom(begin), name.ident, type)
+            collect.reset(tbegin)
+        
+        return ParamSyntax(*collect.argsFrom(begin), name.ident)
+    
+    def parseTypeSyntax(self, collect):
         return None
     
     def parseExpressionList(self, collect):
@@ -118,7 +158,11 @@ class SyntaxTreeParser(object):
             return None
         
         num = collect.expectNum()
-        if not num:
-            return None
+        if num:
+            return TermExprSyntax(*collect.argsFrom(begin), num.num)
         
-        return TermExprSyntax(*collect.argsFrom(begin), num.num)
+        ident = collect.expectIdent()
+        if ident:
+            return TermExprSyntax(*collect.argsFrom(begin), ident.ident)
+        
+        return None

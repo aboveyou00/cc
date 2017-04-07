@@ -3,20 +3,24 @@ from sys import argv
 
 test_file = '''
 
-def add()
-    1+2
+def add(lhs, rhs)
+    lhs + rhs
 end
 
-def sub()
-    5-3
+def sub(lhs, rhs)
+    lhs - rhs
 end
 
-def mul()
-    1*2
+def mul(lhs, rhs)
+    lhs * rhs
 end
 
-def div()
-    8/4
+def div(lhs, rhs)
+    lhs / rhs
+end
+
+def mod(lhs, rhs)
+    lhs % rhs
 end
 
 def main()
@@ -24,6 +28,11 @@ def main()
 end
 
 '''
+#add(1, 1)
+#sub(5, 3)
+#mul(1, 2)
+#div(8, 4)
+#mod(6, 4)
 
 def main(args):
     cc = Compiler()

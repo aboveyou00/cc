@@ -1,0 +1,29 @@
+
+
+CompilationUnit := (Ws* Token)* Ws* EofToken
+
+Ws := ' ' | '\t' | Nl
+
+Nl := '\r' ['\n']
+    | '\n'
+
+Token := IdentToken
+       | KeywordToken
+       | OpToken
+       | NumToken
+       | ErrorToken
+
+IdentToken := IdentStartChar IdentChar* *** BUT NOT KeywordToken
+            | '@' IdentChar+
+
+KeywordToken := 'def' | 'end'
+
+OpToken := '+' | '-' | '*' | '/' | '%' | '(' | ')' | ',' | ':'
+
+NumToken := DecDigit+
+
+DecDigit := '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+
+ErrorToken := ANY_CHARACTER_EXCEPT_Ws_AND_EOF*
+
+EofToken := END_OF_FILE | '\0'

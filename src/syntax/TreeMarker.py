@@ -1,4 +1,4 @@
-from tokenizer import IdentToken, OpToken, NumberToken, EofToken
+from tokenizer import IdentToken, KeywordToken, OpToken, NumberToken, EofToken
 
 class TreeMarker(object):
     def __init__(self, cunit):
@@ -30,6 +30,11 @@ class TreeMarker(object):
         if ident and not type(ident) is list:
             ident = [ident]
         return self.expect(lambda tok: type(tok) is IdentToken and (ident == None or tok.ident in ident))
+    
+    def expectKeyword(self, key = None):
+        if key and not type(key) is list:
+            key = [key]
+        return self.expect(lambda tok: type(tok) is KeywordToken and (key == None or tok.key in key))
     
     def expectOp(self, op = None):
         if op and not type(op) is list:

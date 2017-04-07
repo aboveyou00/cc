@@ -1,5 +1,19 @@
 
 
+CompilationUnit := Decl* EOF
+
+Decl := FuncDecl
+
+FuncDecl := 'def' IdentToken '(' ParamList ')' Expr* 'end'
+
+ParamList := [(ParamList ',')* Param]
+
+Param := IdentToken [':' Type]
+
+Type := ???
+
+Expr := AddExpr
+
 AddExpr := AddExpr ('+' | '-') MultExpr
          | MultExpr
 
@@ -8,8 +22,11 @@ MultExpr := MultExpr ('*' | '/' | '%') TermExpr
 
 TermExpr := '(' ExprSyntax ')'
           | NumberToken
+          | IdentToken
 
 
+
+// For later:
 
 AddExpr := AddExpr ('+' | '-') MultExpr
          | MultExpr

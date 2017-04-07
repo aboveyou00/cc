@@ -1,8 +1,10 @@
 from tokenizer.IdentToken import *
+from tokenizer.KeywordToken import *
 from tokenizer.OpToken import *
 from tokenizer.ErrorToken import *
 from tokenizer.EofToken import *
 from tokenizer.NumberToken import *
+from tokenizer.Util import isKeyword
 
 class Tokenizer(object):
     def __init__(self):
@@ -58,13 +60,16 @@ class Tokenizer(object):
         return False
     
     def collect_ident(self, pos, line_idx):
-        if self.string[pos].isalpha() or self.string[pos] in '_$':
+        if self.string[pos].isalpha() or self.string[pos] in '_$@':
             ident = self.string[pos]
             pos += 1
             
             while self.string[pos].isalnum() or self.string[pos] in '_$':
                 ident += self.string[pos]
                 pos += 1
+            
+            if isKeyword(ident):
+                return (KeywordToken(self.line_num, line_idx, ident), pos)
             
             return (IdentToken(self.line_num, line_idx, ident), pos)
         
@@ -85,7 +90,7 @@ class Tokenizer(object):
     
     def collect_op(self, pos, line_idx):
         chr = self.string[pos]
-        if chr in '+-*/%()':
+        if chr in '+-*/%(),:':
             pos += 1
             return (OpToken(self.line_num, line_idx, chr), pos)
         
