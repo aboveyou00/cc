@@ -6,5 +6,15 @@ class InvocationExprSyntax(PrimaryExprSyntax):
         self.lhs = lhs
         self.args = args
     
+    def registerNames(self, declspace):
+        self.lhs.registerNames(declspace)
+        for arg in self.args:
+            arg.registerNames(declspace)
+    
+    def resolveNames(self):
+        self.lhs.resolveNames()
+        for arg in self.args:
+            arg.resolveNames()
+    
     def __str__(self):
         return str(self.lhs) + '(' + ', '.join(map(str, self.args)) + ')'

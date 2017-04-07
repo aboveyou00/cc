@@ -9,6 +9,12 @@ class UnaryExprSyntax(ExprSyntax):
         self.op = op
         self.rhs = rhs
     
+    def registerNames(self, declspace):
+        self.rhs.registerNames(declspace)
+    
+    def resolveNames(self):
+        self.rhs.resolveNames()
+    
     def isHigherPrecedence(self, other):
         return isSubclassOfAny(other, [PrimaryExprSyntax, TermExprSyntax])
     

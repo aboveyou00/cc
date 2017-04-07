@@ -17,6 +17,14 @@ class CompilationUnit(object):
         parser = SyntaxTreeParser()
         self.syntax = parser.parseCompilationUnit(self)
     
+    def registerNames(self, declspace):
+        for syntax in self.syntax:
+            syntax.registerNames(declspace)
+    
+    def resolveNames(self):
+        for syntax in self.syntax:
+            syntax.resolveNames()
+    
     def __str__(self):
         assert(type(self.name) == str)
         assert(type(str(self.tokens)) == str)

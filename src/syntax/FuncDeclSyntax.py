@@ -6,6 +6,19 @@ class FuncDeclSyntax(DeclSyntax):
         self.name = name
         self.params = params
         self.exprs = exprs
+        self.mydeclspace = None
+    
+    def registerNames(self, declspace):
+        declspace.register(self.name, self)
+        self.mydeclspace = declspace.fork()
+        self.params.registerNames(self.mydeclspace)
+        for expr in self.exprs:
+            expr.registerNames(self.mydeclspace)
+    
+    def resolveNames(self):
+        self.params.resolveNames()
+        for expr in self.exprs:
+            expr.resolveNames()
     
     def __str__(self):
         sig = 'def ' + self.name + '(' + str(self.params) + ')'

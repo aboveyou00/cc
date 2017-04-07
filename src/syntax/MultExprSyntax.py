@@ -11,6 +11,14 @@ class MultExprSyntax(ExprSyntax):
         self.op = op
         self.rhs = rhs
     
+    def registerNames(self, declspace):
+        self.lhs.registerNames(declspace)
+        self.rhs.registerNames(declspace)
+    
+    def resolveNames(self):
+        self.lhs.resolveNames()
+        self.rhs.resolveNames()
+    
     def isHigherPrecedence(self, other):
         return isSubclassOfAny(other, [UnaryExprSyntax, PrimaryExprSyntax, TermExprSyntax])
     

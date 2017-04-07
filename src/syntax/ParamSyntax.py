@@ -6,6 +6,15 @@ class ParamSyntax(Syntax):
         self.name = name
         self.type = type
     
+    def registerNames(self, declspace):
+        declspace.register(self.name, self)
+        if self.type:
+            self.type.registerNames(declspace)
+    
+    def resolveNames(self):
+        if self.type:
+            self.type.resolveNames()
+    
     def __str__(self):
         if self.type:
             return self.name + ': ' + str(self.type)

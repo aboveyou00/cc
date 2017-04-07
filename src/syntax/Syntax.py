@@ -7,6 +7,12 @@ class Syntax(object):
         self.tok_start_idx = tok_start_idx
         self.tok_count = tok_count
     
+    def registerNames(self, declspace):
+        pass
+    
+    def resolveNames(self):
+        pass
+    
     def __str__(self):
         toks = self.cunit.tokens[self.tok_start_idx : self.tok_start_idx+self.tok_count]
         print(toks)
