@@ -9,7 +9,10 @@ CompilationUnit := Decl* EOF
 
 Decl := FuncDecl
 
-FuncDecl := 'def' IdentToken SAME_LINE('(') ParamList ')' Expr* 'end'
+FuncDecl := FuncDeclSignature Expr* 'end'
+          | FuncDeclSignature SAME_LINE('=') Expr
+
+FuncDeclSignature := 'def' IdentToken SAME_LINE('(') ParamList ')'
 
 ParamList := [(ParamList ',')* Param]
 

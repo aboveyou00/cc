@@ -8,4 +8,7 @@ class FuncDeclSyntax(DeclSyntax):
         self.exprs = exprs
     
     def __str__(self):
-        return 'def ' + self.name + '(' + str(self.params) + ')\n  ' + '\n  '.join(map(str, self.exprs)) + '\nend'
+        sig = 'def ' + self.name + '(' + str(self.params) + ')'
+        if len(self.exprs) == 1:
+            return sig + ' = ' + str(self.exprs[0])
+        return sig + '\n  ' + '\n  '.join(map(str, self.exprs)) + '\nend'

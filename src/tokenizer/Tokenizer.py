@@ -108,7 +108,7 @@ class Tokenizer(object):
     
     def collect_op(self, pos, line_idx):
         chr = self.string[pos]
-        if chr in '+-*/%(),:':
+        if chr in '+-*/%(),:=':
             pos += 1
             return (OpToken(self.line_num, line_idx, chr), pos)
         

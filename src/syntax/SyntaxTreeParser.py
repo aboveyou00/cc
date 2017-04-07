@@ -50,9 +50,17 @@ class SyntaxTreeParser(object):
         if name and collect.expectOp('('):
             params = self.parseParamListSyntax(collect)
             if collect.expectOp(')'):
-                exprs = self.parseExpressionList(collect)
-                if collect.expectKeyword('end'):
-                    return FuncDeclSyntax(*collect.argsFrom(begin), name.ident, params, exprs)
+                if collect.expectSameLine() and collect.expectOp('='):
+                    ebegin = collect.mark()
+                    expr = self.parseExprSyntax(collect)
+                    if not expr:
+                        expr = ErrorSyntax(*collect.argsFrom(ebegin))
+                    return FuncDeclSyntax(*collect.argsFrom(begin), name.ident, params, [expr])
+                
+                else:
+                    exprs = self.parseExpressionList(collect)
+                    if collect.expectKeyword('end'):
+                        return FuncDeclSyntax(*collect.argsFrom(begin), name.ident, params, exprs)
         
         collect.reset(begin)
         return None

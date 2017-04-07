@@ -22,7 +22,7 @@ IdentToken := IdentStartChar IdentChar* *** BUT NOT KeywordToken
 
 KeywordToken := 'def' | 'end'
 
-OpToken := '+' | '-' | '*' | '/' | '%' | '(' | ')' | ',' | ':'
+OpToken := '+' | '-' | '*' | '/' | '%' | '(' | ')' | ',' | ':' | '='
 
 NumToken := DecDigit+
 
