@@ -117,6 +117,9 @@ class SyntaxTreeParser(object):
         
         while True:
             mark = collect.mark()
+            if not collect.expectSameLine():
+                break
+            
             op = collect.expectOp(['+', '-'])
             if not op:
                 break
@@ -137,6 +140,9 @@ class SyntaxTreeParser(object):
         
         while True:
             mark = collect.mark()
+            if not collect.expectSameLine():
+                break
+            
             op = collect.expectOp(['*', '/', '%'])
             if not op:
                 break
@@ -155,6 +161,9 @@ class SyntaxTreeParser(object):
         if not op:
             return self.parsePrimaryExprSyntax(collect)
         
+        if not collect.expectSameLine():
+            return None
+        
         rhs = self.parseUnaryExprSyntax(collect)
         if not rhs:
             collect.reset(begin)
@@ -170,7 +179,7 @@ class SyntaxTreeParser(object):
         
         while True:
             reset = collect.mark()
-            if not collect.expectOp('('):
+            if not collect.expectSameLine() or not collect.expectOp('('):
                 break
             
             args = self.parseArgumentList(collect)

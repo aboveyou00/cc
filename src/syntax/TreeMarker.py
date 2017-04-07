@@ -16,15 +16,22 @@ class TreeMarker(object):
     def argsFrom(self, mark):
         return (self.cunit, mark, self.pos - mark)
     
-    def expect(self, fn):
+    def expect(self, fn, collect = True):
         if self.pos >= len(self.tokens):
             return False
         
-        if fn(self.tokens[self.pos]):
-            self.pos += 1
-            return self.tokens[self.pos - 1]
+        tok = self.tokens[self.pos]
+        if fn(tok):
+            if collect:
+                self.pos += 1
+            return tok
         
         return None
+    
+    def expectSameLine(self):
+        assert(self.pos > 0)
+        prev = self.tokens[self.pos - 1]
+        return self.expect(lambda tok: tok.linen == prev.linen, collect = False)
     
     def expectIdent(self, ident = None):
         if ident and not type(ident) is list:
