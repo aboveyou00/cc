@@ -1,5 +1,10 @@
 
 
+
+Note: SAME_LINE means that the next token starts on the same line as the previous token ended
+
+
+
 CompilationUnit := Decl* EOF
 
 Decl := FuncDecl
@@ -17,8 +22,12 @@ Expr := AddExpr
 AddExpr := AddExpr SAME_LINE('+' | '-') MultExpr
          | MultExpr
 
-MultExpr := MultExpr SAME_LINE('*' | '/' | '%') PrimaryExpr
-            PrimaryExpr
+MultExpr := MultExpr SAME_LINE('*' | '/' | '%') UnaryExpr
+            UnaryExpr
+
+UnaryExpr := '+' SAME_LINE(UnaryExpr)
+           | '-' SAME_LINE(UnaryExpr)
+           | PrimaryExpr
 
 PrimaryExpr := PrimaryExpr SAME_LINE('(') ArgList ')'
              | TermExpr

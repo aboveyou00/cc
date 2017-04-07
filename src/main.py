@@ -23,10 +23,12 @@ def div(lhs, rhs)
 end
 
 def mod(lhs, rhs)
+    -3
     lhs % rhs
 end
 
 def main()
+    +3
     add(1, 1)
     mul(1, sub(5, 3))
     div(8, 4)

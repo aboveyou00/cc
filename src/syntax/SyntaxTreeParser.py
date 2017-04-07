@@ -10,6 +10,7 @@ from syntax.ParamSyntax import *
 from syntax.ExprSyntax import *
 from syntax.AddExprSyntax import *
 from syntax.MultExprSyntax import *
+from syntax.UnaryExprSyntax import *
 from syntax.InvocationExprSyntax import *
 from syntax.TermExprSyntax import *
 
@@ -130,7 +131,7 @@ class SyntaxTreeParser(object):
     
     def parseMultExprSyntax(self, collect):
         begin = collect.mark()
-        lhs = self.parsePrimaryExprSyntax(collect)
+        lhs = self.parseUnaryExprSyntax(collect)
         if not lhs:
             return None
         
@@ -140,13 +141,26 @@ class SyntaxTreeParser(object):
             if not op:
                 break
             
-            rhs = self.parsePrimaryExprSyntax(collect)
+            rhs = self.parseUnaryExprSyntax(collect)
             if not rhs:
                 collect.reset(mark)
                 break
             lhs = MultExprSyntax(*collect.argsFrom(begin), lhs, op.op, rhs)
         
         return lhs
+    
+    def parseUnaryExprSyntax(self, collect):
+        begin = collect.mark()
+        op = collect.expectOp(['+', '-'])
+        if not op:
+            return self.parsePrimaryExprSyntax(collect)
+        
+        rhs = self.parseUnaryExprSyntax(collect)
+        if not rhs:
+            collect.reset(begin)
+            return None
+        
+        return UnaryExprSyntax(*collect.argsFrom(begin), op.op, rhs)
     
     def parsePrimaryExprSyntax(self, collect):
         begin = collect.mark()

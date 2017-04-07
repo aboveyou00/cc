@@ -1,5 +1,6 @@
 from syntax.ExprSyntax import *
 from syntax.MultExprSyntax import *
+from syntax.UnaryExprSyntax import *
 from syntax.PrimaryExprSyntax import *
 from syntax.TermExprSyntax import *
 from syntax.Util import isSubclassOfAny
@@ -12,7 +13,7 @@ class AddExprSyntax(ExprSyntax):
         self.rhs = rhs
     
     def isHigherPrecedence(self, other):
-        return isSubclassOfAny(other, [MultExprSyntax, PrimaryExprSyntax, TermExprSyntax])
+        return isSubclassOfAny(other, [MultExprSyntax, UnaryExprSyntax, PrimaryExprSyntax, TermExprSyntax])
     
     def __str__(self):
         return self.precendenceParens(self.lhs) + ' ' + self.op + ' ' + self.precendenceParens(self.rhs)
