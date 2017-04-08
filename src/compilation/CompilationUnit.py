@@ -25,6 +25,12 @@ class CompilationUnit(object):
         for syntax in self.syntax:
             syntax.resolveNames()
     
+    def tryResolveTypes(self):
+        while True:
+            changed = any([syntax.tryResolveTypes() for syntax in self.syntax])
+            if not changed:
+                break
+    
     def __str__(self):
         assert(type(self.name) == str)
         assert(type(str(self.tokens)) == str)

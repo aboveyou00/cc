@@ -17,17 +17,17 @@ class Compiler(object):
         assert(not self.finalized)
         self.finalized = True
         
-        for cunit in self.cunits:
-            cunit.tokenize()
+        steps = [
+            ['tokenize'],
+            ['parseSyntaxTree'],
+            ['registerNames', self.declspace],
+            ['resolveNames'],
+            ['tryResolveTypes']
+        ]
         
-        for cunit in self.cunits:
-            cunit.parseSyntaxTree()
-        
-        for cunit in self.cunits:
-            cunit.registerNames(self.declspace)
-        
-        for cunit in self.cunits:
-            cunit.resolveNames()
+        for step in steps:
+            for cunit in self.cunits:
+                getattr(cunit, step[0])(*step[1:])
     
     def __str__(self):
         return 'Compiler (' + str(len(self.cunits)) + ' compilation units):\n\n' + '\n\n'.join(map(str, self.cunits))

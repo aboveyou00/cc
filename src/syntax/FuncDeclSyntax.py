@@ -7,6 +7,7 @@ class FuncDeclSyntax(DeclSyntax):
         self.params = params
         self.exprs = exprs
         self.mydeclspace = None
+        self.fnT = self.params.createFunctionT()
     
     def registerNames(self, declspace):
         declspace.register(self.name, self)
@@ -19,6 +20,16 @@ class FuncDeclSyntax(DeclSyntax):
         self.params.resolveNames()
         for expr in self.exprs:
             expr.resolveNames()
+    
+    def tryResolveTypes(self):
+        changed = any([expr.tryResolveType() for expr in self.exprs])
+        return changed
+    
+    def tryResolveType(self):
+        return False
+    
+    def resolvedType(self):
+        return self.fnT
     
     def __str__(self):
         sig = 'def ' + self.name + '(' + str(self.params) + ')'

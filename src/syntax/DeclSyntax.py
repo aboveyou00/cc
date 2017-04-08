@@ -9,3 +9,6 @@ class DeclSyntax(Syntax):
     
     def resolveNames(self):
         assert(False)
+    
+    def tryResolveTypes(self):
+        assert(False)
