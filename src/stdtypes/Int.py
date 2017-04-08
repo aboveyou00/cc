@@ -14,8 +14,8 @@ class Int(Type):
         return Int._inst or Int()
     
     def registerMethods(self):
-        self.registerOverload(OP_UN_PLUS, [self, self], self, self.emitUnPlus)
-        self.registerOverload(OP_UN_NEG, [self, self], self, self.emitNegate)
+        self.registerOverload(OP_UN_PLUS, [self], self, self.emitUnPlus)
+        self.registerOverload(OP_UN_NEG, [self], self, self.emitNegate)
         
         self.registerOverload(OP_ADD, [self, self], self, self.emitAdd)
         self.registerOverload(OP_SUB, [self, self], self, self.emitSub)
