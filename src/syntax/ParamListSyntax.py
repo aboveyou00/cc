@@ -15,10 +15,13 @@ class ParamListSyntax(Syntax):
         for param in self.params:
             param.resolveNames()
     
-    def createFunctionT(self):
+    def createFunctionT(self, declspace, funcDecl):
         self.fnT = Function(len(self.params))
+        overload = declspace.registerFnOverload(funcDecl.name, self.fnT)
+        
         for i, param in enumerate(self.params):
             param.setFunctionT(self.fnT, i)
+        
         return self.fnT
     
     def __str__(self):

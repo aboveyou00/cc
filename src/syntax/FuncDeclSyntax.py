@@ -7,10 +7,10 @@ class FuncDeclSyntax(DeclSyntax):
         self.params = params
         self.exprs = exprs
         self.mydeclspace = None
-        self.fnT = self.params.createFunctionT()
+        self.fnT = None
     
     def registerNames(self, declspace):
-        declspace.register(self.name, self)
+        self.fnT = self.params.createFunctionT(declspace, self)
         self.mydeclspace = declspace.fork()
         self.params.registerNames(self.mydeclspace)
         for expr in self.exprs:

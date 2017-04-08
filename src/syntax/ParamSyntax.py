@@ -5,8 +5,8 @@ class ParamSyntax(Syntax):
         super().__init__(cunit, tok_start_idx, tok_count)
         self.name = name
         self.type = type
-        self.index = None
         self.fnT = None
+        self.index = None
     
     def registerNames(self, declspace):
         declspace.register(self.name, self)

@@ -20,6 +20,16 @@ class DeclarationSpace(object):
         
         return mgroup.registerOverload(args, rett, impl)
     
+    def registerFnOverload(self, name, fn):
+        mgroup = self.resolve(name, True)
+        if mgroup and not type(mgroup) == MethodGroup:
+            assert(False)
+        elif not mgroup:
+            mgroup = MethodGroup(name)
+            self.register(name, mgroup)
+        
+        mgroup.registerFnOverload(fn)
+    
     def resolve(self, name, local = False):
         if name in self.names:
             return self.names[name]
@@ -31,19 +41,16 @@ class DeclarationSpace(object):
     def fork(self):
         return DeclarationSpace(self)
     
-    def findOverload(self, name, args):
+    def findMethodGroup(self, name):
         mgroup = self.resolve(name, True)
         if not mgroup or not type(mgroup) == MethodGroup:
             return None
-        
-        for overload in mgroup.overloads:
-            if overload['args'] == args:
-                return overload
-        return None
+        return mgroup
+    
+    def findOverload(self, name, args):
+        mgroup = self.findMethodGroup(name)
+        return mgroup and mgroup.findOverload(args)
     
     def findOverloadsByReturnType(self, name, rett):
-        mgroup = self.resolve(name, True)
-        if not mgroup or not type(mgroup) == MethodGroup:
-            return None
-        
-        return [overload for overload in mgroup.overloads if overload['rett'] == rett]
+        mgroup = self.findMethodGroup(name)
+        return mgroup and mgroup.findOverloadsByReturnType(rett)

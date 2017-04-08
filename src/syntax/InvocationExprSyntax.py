@@ -1,10 +1,12 @@
 from syntax.PrimaryExprSyntax import *
+from stdtypes.Util import OP_CALL
 
 class InvocationExprSyntax(PrimaryExprSyntax):
     def __init__(self, cunit, tok_start_idx, tok_count, lhs, args):
         super().__init__(cunit, tok_start_idx, tok_count)
         self.lhs = lhs
         self.args = args
+        self.overload = None
     
     def registerNames(self, declspace):
         self.lhs.registerNames(declspace)
@@ -20,26 +22,40 @@ class InvocationExprSyntax(PrimaryExprSyntax):
         if self.resolvedType():
             return False
         
-        changed = self.lhs.tryResolveType() or any([arg.tryResolveType() for arg in self.args])
+        changed = self.lhs.tryResolveType()
+        changed = any([arg.tryResolveType() for arg in self.args]) or changed
         leftT = self.lhs.resolvedType()
         argTs = [arg.resolvedType() for arg in self.args]
         if not leftT:
             return changed
         
+        if not self.overload:
+            methodGroup = leftT if type(leftT) == MethodGroup else leftT.declspace.findMethodGroup(OP_CALL)
+            print('Trying to resolve ' + str(self.lhs) + '.' + OP_CALL + '(' + ', '.join(map(str, argTs)) + ')')
+            overloads = methodGroup.findPossibleOverloads(argTs)
+            if len(overloads) == 1:
+                self.overload = overloads[0]
+                changed = True
+            else:
+                return changed
+        
         hasAllArgTypes = not any([not argT for argT in argTs])
-        hasAllParamTypes = not any([not argT for argT in leftT.getArgumentTypes()])
+        hasAllParamTypes = not any([not argT for argT in self.overload['args']])
         if not hasAllArgTypes and not hasAllParamTypes:
             return changed
         
         if not hasAllParamTypes:
-            changed = leftT.suggestParamTypes(argTs) or changed
+            suggestFn = getattr(self.overload['builder'], 'suggestParamTypes', None)
+            if suggestFn:
+                changed = suggestFn(argTs) or changed
         
         if not hasAllArgTypes:
-            changed = any([arg.suggestType(paramT) for arg, paramT in zip(self.args, leftT.getArgumentTypes())])
+            changed = any([
+                arg.suggestType(paramT)
+                for arg, paramT in zip(self.args, self.overload['args'])
+            ]) or changed
         
-        print('Trying to resolve ' + str(self.lhs) + ' invoked with (' + ', '.join(map(str, argTs)) + ')')
-        
-        fnRetType = leftT.getReturnType()
+        fnRetType = self.overload['rett']
         if fnRetType:
             self._resolvedType = fnRetType
             return True

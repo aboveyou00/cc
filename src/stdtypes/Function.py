@@ -8,6 +8,7 @@ class Function(Type):
     
     def registerMethods(self, argc):
         self.overload = self.registerOverload(OP_CALL, [None for n in range(argc)], None, self.emitCall)
+        self.overload['builder'] = self
     
     def getArgumentTypes(self):
         return self.overload['args']
