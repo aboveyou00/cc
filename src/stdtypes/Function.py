@@ -28,10 +28,18 @@ class Function(Type):
                 paramTypes[paramIdx] = suggestedT
                 changed = True
             
-            elif not param == suggestedT:
+            elif param != suggestedT:
                 assert(False)
         
         return changed
+    
+    def suggestReturnType(self, suggestedType):
+        retType = self.getReturnType()
+        if not retType:
+            self.overload['rett'] = suggestedType
+            return True
+        elif retType != suggestedType:
+            assert(False)
     
     def emitCall(self):
         pass

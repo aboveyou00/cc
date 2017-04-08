@@ -30,7 +30,5 @@ class ParamSyntax(Syntax):
         return None
     
     def __str__(self):
-        if self.type:
-            return self.name + ': ' + str(self.type)
-        
-        return self.name
+        type = self.type or self.resolvedType() or '???'
+        return self.name + ': ' + str(type)

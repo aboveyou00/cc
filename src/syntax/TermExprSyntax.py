@@ -32,11 +32,5 @@ class TermExprSyntax(ExprSyntax):
     
     def __str__(self):
         if self.ident:
-            if self.resolvedType():
-                return self.ident + ':' + str(self.resolvedType())
-            elif self.ident_res:
-                return '<' + str(type(self.ident_res).__name__) + '::' + self.ident + '>'
             return self.ident
-        if self.resolvedType():
-            return str(self.num) + ':' + str(self.resolvedType())
         return str(self.num)
