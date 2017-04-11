@@ -23,26 +23,26 @@ class Int(Type):
         self.registerOverload(OP_DIV, [self, self], self, self.emitDiv)
         self.registerOverload(OP_MOD, [self, self], self, self.emitMod)
     
-    def emitUnPlus(self):
-        pass
+    def emitUnPlus(self, builder):
+        builder.emit(('nop'))
     
-    def emitNegate(self):
-        pass
+    def emitNegate(self, builder):
+        builder.emit(('neg'))
     
-    def emitAdd(self):
-        pass
+    def emitAdd(self, builder):
+        builder.emit(('add'))
     
-    def emitSub(self):
-        pass
+    def emitSub(self, builder):
+        builder.emit(('sub'))
     
-    def emitMul(self):
-        pass
+    def emitMul(self, builder):
+        builder.emit(('mul'))
     
-    def emitDiv(self):
-        pass
+    def emitDiv(self, builder):
+        builder.emit(('div'))
     
-    def emitMod(self):
-        pass
+    def emitMod(self, builder):
+        builder.emit(('mod'))
     
     def __str__(self):
         return 'int'

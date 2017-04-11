@@ -45,5 +45,10 @@ class BinaryExprSyntax(ExprSyntax):
                 return ops[op]
         return None
     
+    def assemble(self, builder):
+        self.lhs.assemble(builder)
+        self.rhs.assemble(builder)
+        self.overload['impl'](builder)
+    
     def __str__(self):
         return self.precendenceParens(self.lhs) + ' ' + self.op + ' ' + self.precendenceParens(self.rhs)

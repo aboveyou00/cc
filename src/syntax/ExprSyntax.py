@@ -14,6 +14,9 @@ class ExprSyntax(Syntax):
     def resolvedType(self):
         return self._resolvedType
     
+    def assemble(self, builder):
+        assert(False)
+    
     def precendenceParens(self, other):
         if self.isHigherPrecedence(other) == False or other.isHigherPrecedence(self):
             return '(' + str(other) + ')'

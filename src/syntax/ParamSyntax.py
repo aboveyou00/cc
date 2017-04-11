@@ -29,6 +29,9 @@ class ParamSyntax(Syntax):
             return self.fnT.getArgumentTypes()[self.index]
         return None
     
+    def assembleIdentRef(self, builder):
+        builder.emit(('ldloc', self.name))
+    
     def __str__(self):
         type = self.type or self.resolvedType() or '???'
         return self.name + ': ' + str(type)

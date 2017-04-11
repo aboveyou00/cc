@@ -37,6 +37,13 @@ class TermExprSyntax(ExprSyntax):
             self._resolvedType = Int.inst()
             return True
     
+    def assemble(self, builder):
+        if self.ident:
+            self.ident_res.assembleIdentRef(builder)
+        
+        else:
+            builder.emit(('ldc', self.num))
+    
     def __str__(self):
         if self.ident:
             return self.ident

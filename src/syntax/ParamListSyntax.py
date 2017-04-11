@@ -1,5 +1,5 @@
 from syntax.Syntax import *
-from stdtypes.Function import *
+from emit.FunctionBuilder import *
 
 class ParamListSyntax(Syntax):
     def __init__(self, cunit, tok_start_idx, tok_count, params):
@@ -16,7 +16,7 @@ class ParamListSyntax(Syntax):
             param.resolveNames()
     
     def createFunctionT(self, declspace, funcDecl):
-        self.fnT = Function(len(self.params))
+        self.fnT = FunctionBuilder(funcDecl.name, len(self.params), funcDecl)
         overload = declspace.registerFnOverload(funcDecl.name, self.fnT)
         
         for i, param in enumerate(self.params):

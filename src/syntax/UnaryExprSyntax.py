@@ -46,6 +46,10 @@ class UnaryExprSyntax(ExprSyntax):
                 return ops[op]
         return None
     
+    def assemble(self, builder):
+        self.operand.assemble(builder)
+        self.overload['impl'](builder)
+    
     def isHigherPrecedence(self, other):
         return isSubclassOfAny(other, [PrimaryExprSyntax, TermExprSyntax])
     

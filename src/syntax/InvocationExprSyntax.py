@@ -62,5 +62,11 @@ class InvocationExprSyntax(PrimaryExprSyntax):
         
         return changed
     
+    def assemble(self, builder):
+        self.lhs.assemble(builder)
+        for arg in self.args:
+            arg.assemble(builder)
+        self.overload['impl'](builder)
+    
     def __str__(self):
         return str(self.lhs) + '(' + ', '.join(map(str, self.args)) + ')'

@@ -32,6 +32,11 @@ class CopperInterpreter(object):
         return method['il']
     
     def assembleMethod(self, method):
-        mbuilder = MethodBuilder(method['name'] if 'name' in method else '???', method['args'])
+        mbuilder = MethodBuilder(method['name'] if 'name' in method else '???', len(method['args']))
         method['il'] = mbuilder
-        pass
+        builder = method['builder']
+        assert(builder)
+        
+        builder.assemble(mbuilder)
+        mbuilder.finalize()
+        print(mbuilder)

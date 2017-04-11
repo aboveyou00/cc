@@ -12,7 +12,10 @@ class MethodBuilder(object):
         self.opcodes.append(opcode)
     
     def stringifyOpcode(self, opcode):
-        return opcode
+        return ' '.join(map(str, opcode)) if type(opcode) == tuple else str(opcode)
+    
+    def finalize(self):
+        pass
     
     def __str__(self):
-        return 'def ' + self.name + '(' + self.argc + ' args, ' + self.localc + ' locals):\n  ' + '\n  '.join(map(self.stringifyOpcode, self.opcodes))
+        return 'def ' + self.name + '(' + str(self.argc) + ' args, ' + str(self.localc) + ' locals):\n  ' + '\n  '.join(map(self.stringifyOpcode, self.opcodes))

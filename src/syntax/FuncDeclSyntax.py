@@ -37,6 +37,13 @@ class FuncDeclSyntax(DeclSyntax):
     def resolvedType(self):
         return self.fnT
     
+    def assemble(self, builder):
+        lastExprIdx = len(self.exprs) - 1
+        for i, expr in enumerate(self.exprs):
+            expr.assemble(builder)
+            if i != lastExprIdx:
+                builder.emit(('pop'))
+    
     def stringifyExpr(self, expr):
         exprStr = str(expr)
         spaces = ' ' * max(0, 40-len(exprStr))

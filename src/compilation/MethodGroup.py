@@ -43,3 +43,6 @@ class MethodGroup(object):
             for overload in self.overloads
             if overload['rett'] == rett
         ]
+    
+    def assembleIdentRef(self, builder):
+        pass
