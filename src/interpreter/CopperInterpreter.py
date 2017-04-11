@@ -38,5 +38,6 @@ class CopperInterpreter(object):
         assert(builder)
         
         builder.assemble(mbuilder)
+        mbuilder.optimize()
         mbuilder.finalize()
         print(mbuilder)
