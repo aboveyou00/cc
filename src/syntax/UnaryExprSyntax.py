@@ -29,7 +29,6 @@ class UnaryExprSyntax(ExprSyntax):
         
         opName = self.resolveOperatorName(self.op)
         assert(opName)
-        print('Trying to resolve ' + opName + '(' + str(operandT) + ')')
         
         self.overload = operandT.declspace.findOverload(opName, [operandT])
         if not self.overload:

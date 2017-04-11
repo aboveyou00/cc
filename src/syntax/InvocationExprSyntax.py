@@ -31,7 +31,6 @@ class InvocationExprSyntax(PrimaryExprSyntax):
         
         if not self.overload:
             methodGroup = leftT if type(leftT) == MethodGroup else leftT.declspace.findMethodGroup(OP_CALL)
-            print('Trying to resolve ' + str(self.lhs) + '.' + OP_CALL + '(' + ', '.join(map(str, argTs)) + ')')
             overloads = methodGroup.findPossibleOverloads(argTs)
             if len(overloads) == 1:
                 self.overload = overloads[0]

@@ -56,7 +56,6 @@ class CopperInterpreter(object):
         builder.assemble(mbuilder)
         mbuilder.optimize()
         mbuilder.finalize()
-        print(mbuilder)
     
     def interpretIl(self, methodIl):
         ip = 0

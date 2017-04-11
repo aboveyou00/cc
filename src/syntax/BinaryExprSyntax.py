@@ -28,7 +28,6 @@ class BinaryExprSyntax(ExprSyntax):
         
         opName = self.resolveOperatorName(self.op)
         assert(opName)
-        print('Trying to resolve ' + opName + '(' + str(leftT) + ', ' + str(rightT) + ')')
         
         self.overload = leftT.declspace.findOverload(opName, [leftT, rightT])
         if not self.overload:

@@ -34,6 +34,5 @@ class CompilationUnit(object):
     def __str__(self):
         assert(type(self.name) == str)
         assert(type(str(self.tokens)) == str)
-        print(type(self.syntax[0]))
         assert(type(str(self.syntax[0])) == str)
         return "CompilationUnit: " + self.name + "\n\nTokens: " + str(self.tokens) + "\n\nSyntax: [\n" + "\n".join(map(str, self.syntax)) + "\n]"

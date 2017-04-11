@@ -15,5 +15,4 @@ class Syntax(object):
     
     def __str__(self):
         toks = self.cunit.tokens[self.tok_start_idx : self.tok_start_idx+self.tok_count]
-        print(toks)
         return ' '.join(map(str, toks))

@@ -1,5 +1,6 @@
 from compilation import Compiler
 from sys import argv
+from interpreter.CopperInterpreter import *
 
 test_file = '''
 
@@ -28,8 +29,18 @@ end
 def main(args):
     cc = Compiler()
     cc.addCompilationUnit('test', test_file)
-    cc.compile()
-    print(cc)
+    if not cc.compile():
+        print('ERROR: Failed to compile.')
+        return
+    
+    interpreter = CopperInterpreter()
+    main = cc.declspace.findOverload('main', [])
+    if not main:
+        print('ERROR: Failed to find entrypoint.')
+        return
+    
+    result = interpreter.eval(main, [])
+    print('Result: ' + str(result))
     input()
 
 if __name__ == '__main__':
