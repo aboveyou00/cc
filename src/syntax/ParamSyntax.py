@@ -30,7 +30,7 @@ class ParamSyntax(Syntax):
         return None
     
     def assembleIdentRef(self, builder):
-        builder.emit(('ldloc', self.name))
+        builder.emit(('ldloc', self.index))
     
     def __str__(self):
         type = self.type or self.resolvedType() or '???'

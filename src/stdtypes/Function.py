@@ -18,7 +18,7 @@ class Function(Type):
         return self.overload['rett']
     
     def emitCall(self, builder):
-        builder.emit(('call', self))
+        builder.emit(('call', self.overload))
     
     def __str__(self):
         args = ', '.join(map(lambda at: str(at) if at else '???', self.getArgumentTypes()))
